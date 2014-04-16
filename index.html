@@ -1,0 +1,119 @@
+<html> 
+	<head>
+		<!-- Display Data -->
+		<title>shuffle that shit!</title>
+
+		<!-- Meta tags -->
+		<meta property="og:image" content="http://www.shufflethatshit.com/images/fb.jpg"/>
+		<meta property="og:title" content="shuffle that shit!"/>
+		<meta property="og:site_name" content="shuffle that shit!"/>
+		<meta property="og:description" content="Sound cloud playlist shuffler.">
+		<meta name="Description" CONTENT="Sound cloud playlist shuffler.">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="mobile-web-app-capable" content="yes">
+
+		<!-- Style Data -->
+		<link rel="stylesheet" type="text/css" href="styles/main.css?v=0000">
+		<link id="size-stylesheet" rel="stylesheet" type="text/css" href="styles/wide.css?v=0000">
+		<link href="images/fav.ico" rel="shortcut icon" type="image/x-icon" />
+		<meta name="viewport" content="initial-scale=1">
+
+		<!-- Fonts -->
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:600italic,700italic,400,300' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Cantarell:700italic,100,400' rel='stylesheet' type='text/css'>
+		<link href='http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet' type='text/css'>
+
+		<!-- Shared Scripts -->
+		<script src="http://connect.soundcloud.com/sdk.js"></script>
+    	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    	<script src="scripts/libs/jquery.touchwipe.min.js"></script>
+
+    	<!-- ShuffleThatShit Scripts -->
+		<script src='scripts/mobile_check.js?v=0000'></script>
+		<script src='scripts/utils.js?v=0000'></script>
+		<script src='scripts/player.js?v=0000'></script>
+		<script src='scripts/main.js?v=0000'></script>
+
+		<!-- Auto adjust the style sheet for different widths -->
+		<script>
+			function adjustStyle(width) {
+			    width = parseInt(width);
+			    if (width <= 320) {
+			        $("#size-stylesheet").attr("href", "styles/narrow.css");
+			    } else {
+			       $("#size-stylesheet").attr("href", "styles/wide.css"); 
+			    }
+			}
+			$(function() {
+			    adjustStyle($(this).width());
+			    $(window).resize(function() {
+			        adjustStyle($(this).width());
+			    });
+			});
+		</script>
+	</head>
+	<body>
+		<div class = "container">
+			<div class = "loader"></div>
+			<div class = "player">
+				<div class = "top_bar">
+					<div class = "song_info"></div>
+					<div class = "controls unselectable">
+						<div class = "control_previous control" onclick="previous()">&#xf04a;</div> <!-- Prev -->
+						<div class = "control_play control" onclick="play()">&#xf04b;</div> <!-- Play -->
+						<div class = "control_pause control" onclick="pause()">&#xf04c;</div> <!-- Pause -->
+						<div class = "control_next control" onclick="next()">&#xf04e;</div> <!-- Next -->
+					</div>
+				</div>
+			</div>
+			<div class="user_comments_container">
+				<div class="user_comments">
+				</div>
+			</div>
+			<div class = "page_title unselectable">
+				shuffle that shit!
+			</div>
+			<div class = "shuffle_controls"> 
+				<div class = "url_input_box_container">
+    				<input type="text" id='url' class='url_input_box' onclick="onClickPlaylistInput()" value="paste soundcloud playlist url here"/>
+					<div class = "control_share control unselectable" onclick="share()">&#xf064;</div> <!--Share -->
+				</div>
+				<div class="submit_button unselectable hand_cursor" onclick="loadPlaylistAndShuffle()">
+					<div class="label">
+						shuffle please!
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class = "bottom_bar">
+			<div class = "section_left">
+				<a href="http://www.soundcloud.com">
+					<img src="http://developers.soundcloud.com/assets/powered_by_white-7ee4327cfbe5d678897edf6b6c5dd30f.png" style="height:100%;"/>
+				</a>
+			</div>
+			<div class = "section_center unselectable">
+				. ben smith 2014 .
+			</div>
+			<div class = "section_right unselectable">
+				thanks erin!
+			</div>
+		</div>
+		<div class = "share_container">
+			<div class = "share_panel">
+				<div class = "share_title unselectable">Share This Playlist</div>
+				<input class="share_link" type="text" id='share_link' value="" readonly/>
+			</div>
+		</div>
+
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-47569030-1', 'shufflethatshit.com');
+		  ga('send', 'pageview');
+
+		</script>
+	</body>
+</html>

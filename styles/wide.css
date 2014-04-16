@@ -1,0 +1,37 @@
+.player
+{	
+	background-position:center;
+}
+
+.top_bar
+{	
+	padding-top: 20px;
+	padding-bottom: 22px;
+}
+
+.controls
+{
+	margin-top: 2px;
+}
+
+.song_info
+{	
+	padding-top: 10px;
+	padding-left:10px;	
+	line-height: 24px;	
+	font-size: 20px;
+}
+
+.page_title
+{
+	height: 70px;
+	padding-top:16px;	
+	font-size: 46px;	
+	letter-spacing: 7px;
+}
+
+.url_input_box
+{
+    width: calc(100% - 60px);
+    font-size: 20px;
+}
