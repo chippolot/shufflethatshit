@@ -270,7 +270,7 @@ function initializePlayer()
 		playerDiv.css("background-image", backgroundImageValue);
 
 		window.location.hash = this.player.playlist.id + "/" + currentTrack.id;
-		history.pushState({}, null, 'http://shufflethatshit.com/#'+this.player.playlist.id + '/' + currentTrack.id);
+		history.pushState({}, null, 'http://'+window.location.host+'/#'+this.player.playlist.id + '/' + currentTrack.id);
 		document.title = currentTrack.title + " : " + getDefaultPageTitle();
 
 		showPlayer();
