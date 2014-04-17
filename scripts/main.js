@@ -335,6 +335,9 @@ function loadPlaylistAndShuffle(options)
 		transitionToPlayerMode();
 	}
 
+	// Solve this in a more elegant way!
+	var wasPlaying = this.player.playing;
+
 	// Get a shuffled tracklist
 	this.player.loadPlaylist(options, $.proxy(function() {
 		this.player.shuffle();
@@ -348,7 +351,10 @@ function loadPlaylistAndShuffle(options)
 
 		if (!isMobileDevice)
 		{
-			play();
+			if (!wasPlaying)
+			{
+				play();
+			}
 		}
 		else
 		{
