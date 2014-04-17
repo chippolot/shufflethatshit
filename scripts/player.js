@@ -83,13 +83,13 @@
 			SC.stream("/tracks/" + trackId, {
 				useHTML5Audio: true,
 				preferFlash: false,
-				ontimedcomments: $.proxy(function(comments){
+				/*ontimedcomments: $.proxy(function(comments){
 					console.log("-- timed comment", comments[0]);
 					if (this.onTimedComment)
 					{
 						this.onTimedComment(comments[0]);
 					}
-				}, this),
+				}, this),*/
 				onfinish: $.proxy(function() {
 					this.trackLoaded = false;
 					this.next();
