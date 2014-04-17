@@ -267,7 +267,6 @@ body{
 
 .submit_button:hover
 {
-	/*opacity: 0.8;*/
 	background-color: hsla(329, 84%, 60%, 0.8);
 }
 

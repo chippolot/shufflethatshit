@@ -270,7 +270,11 @@ function initializePlayer()
 		playerDiv.css("background-image", backgroundImageValue);
 
 		window.location.hash = this.player.playlist.id + "/" + currentTrack.id;
-		history.pushState({}, null, 'http://'+window.location.host+'/#'+this.player.playlist.id + '/' + currentTrack.id);
+
+		var newUrl = 'http://'+window.location.host;
+		newUrl += window.location.pathname.indexOf('/testing') == 0 ? '/testing/' : '/';
+		newUrl += '#'+this.player.playlist.id + '/' + currentTrack.id;
+		history.pushState({}, null, newUrl);
 		document.title = currentTrack.title + " : " + getDefaultPageTitle();
 
 		showPlayer();
