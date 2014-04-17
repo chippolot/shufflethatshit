@@ -94,9 +94,16 @@
 					this.trackLoaded = false;
 					this.next();
 				}, this),
+				whileplaying: $.proxy(function(){
+					if (this.onPlayPositionChanged)
+					{
+						this.onPlayPositionChanged();
+					}
+				}, this)
 			}, $.proxy(function(sound){
 				this.trackLoaded = true;
 				this.currentTrackManagerId = sound.sID;
+				this.sound = sound;
 
 				this.currentTrack = this.playlist.trackData[trackId];
 
@@ -120,6 +127,7 @@
 			this.playlist = null;
 			this.currentTrackManagerId;
 			this.currentTrackIndex = 0;
+			this.sound = null;
 
 			// Player state
 			this.currentTrack = null;
@@ -131,6 +139,7 @@
 			this.onTrackLoaded = null;
 			this.onPlaylistLoaded = null;
 			this.onTimedComment = null;
+			this.onPlayPositionChanged = null;
 
 			// Initialize Sound Cloud
 			SC.initialize({
@@ -201,6 +210,18 @@
 			{
 				this.play();
 			}
+		},
+
+		getPositionPercent:function() {
+			if (!this.sound || !this.currentTrack) return 0;
+
+			return this.sound.position / this.currentTrack.duration;
+		},
+
+		setPositionPercent:function(percent) {
+			if (!this.sound || !this.currentTrack) return;
+
+			this.sound.setPosition(percent*this.currentTrack.duration);
 		},
 
 		play:function() {

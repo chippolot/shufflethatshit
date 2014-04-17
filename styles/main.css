@@ -90,45 +90,15 @@ body{
 	top:0px;
 }
 
-
-.user_comments_container 
-{ 
-	position: relative; 
-	top:100%;
+/*the slider background*/
+.slider {
+	position:absolute;
 	width:100%;
-	/*
-	left:50%;
-	float: left; */
-	display:none;
+	height:30px;
+	top:0px;
 }
-
-.user_comments
-{
-	/*background-color: hsla(329, 84%, 55%, 0.75);*/
-	/*border: 1px solid hsla(329, 84%, 55%, 0.85);
-	border-radius: 10px;*/
-
-	background-color: rgba(0,0,0,0.6);
-
-	position: relative; 
-	top:-196px;
-	width:100%;
-
-	/*color: #ffffff;*/
-
-	color: rgb(255, 173, 215);
-
-
-    white-space: nowrap;
-	text-align: center;
-	font-family: 'Open Sans', sans-serif;
-	letter-spacing: 3px;
-	font-weight: 300;
-	font-size: 12;
-	overflow: hidden;
-  	text-overflow: ellipsis;
-
-	padding: 5px 8px;
+.ui-slider-handle {
+	display: none;
 }
 
 .controls

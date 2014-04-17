@@ -5,6 +5,7 @@ var defaultPlaylistInputText = false;
 var currentPlaylistPermalink = null;
 var player = null;
 var firstPlay = true;
+var userIsSlidingPositionBar = false;
 
 var commentShowing = false;
 var commentTimeout;
@@ -51,6 +52,28 @@ $(document).ready(function()
 	     preventDefaultEvents: true
 	});
 
+	// Initialize song position slider
+	$(".slider").slider({
+		animate: true,
+		range: "min",
+		value: 0,
+		min: 0,
+		max: 1000,
+		step: 1,
+
+		//user starts sliding the bar
+		start: function( event, ui ) {
+			userIsSlidingPositionBar = true;
+		},	
+
+		// user stops sliding the bar
+		stop: function( event, ui ) {
+			userIsSlidingPositionBar = false;
+			player.setPositionPercent(ui.value/1000.0);
+		}
+	});
+
+
 	console.log("-- initialization complete");
 })
 
@@ -72,7 +95,7 @@ function showLoader(firstCall)
 	document.title = getDefaultPageTitle();
 
 	$('.loader').fadeIn(750);
-	$('.player').fadeOut(firstCall ? 0 : 750);
+	//$('.player').fadeOut(firstCall ? 0 : 750);
 	$('.user_comments').hide();
 	$('.control_share').hide();
 }
@@ -220,26 +243,26 @@ function share()
 ///////////////////////////////////////////////////////////////////////////////
 function previous()
 {
-	this.player.previous();
+	player.previous();
 }
 
 function play()
 {
-	this.player.play();
+	player.play();
 	$('.control_play').hide();
 	$('.control_pause').show();
 }
 
 function pause()
 {
-	this.player.pause();
+	player.pause();
 	$('.control_play').show();
 	$('.control_pause').hide();
 }
 
 function next()
 {
-	this.player.next();
+	player.next();
 }
 
 // Sound Cloud
@@ -250,13 +273,13 @@ function initializePlayer()
 {
 	console.log("-- initializing player");
 
-	this.player = new Player();
-	this.player.initialize("aa4e45fd3130de0246b5ba7c0c72a67e");
+	player = new Player();
+	player.initialize("aa4e45fd3130de0246b5ba7c0c72a67e");
 
-	this.player.onTrackLoaded = $.proxy(function() {
+	player.onTrackLoaded = $.proxy(function() {
 		var songInfoDiv = $('.song_info');
 		var playerDiv = $('.player');
-		var currentTrack = this.player.currentTrack;
+		var currentTrack = player.currentTrack;
 
 		var songTitleLink = '<a target="_blank" href="'+currentTrack.permalink_url+'">'+currentTrack.title+'</a>';
 		songInfoDiv.html(songTitleLink);
@@ -269,39 +292,25 @@ function initializePlayer()
 		}
 		playerDiv.css("background-image", backgroundImageValue);
 
-		window.location.hash = this.player.playlist.id + "/" + currentTrack.id;
+		window.location.hash = player.playlist.id + "/" + currentTrack.id;
 
 		var newUrl = 'http://'+window.location.host;
 		newUrl += window.location.pathname.indexOf('/testing') == 0 ? '/testing/' : '/';
-		newUrl += '#'+this.player.playlist.id + '/' + currentTrack.id;
+		newUrl += '#'+player.playlist.id + '/' + currentTrack.id;
 		history.pushState({}, null, newUrl);
 		document.title = currentTrack.title + " : " + getDefaultPageTitle();
 
 		showPlayer();
 	}, this);
 
-	this.player.onPlaylistLoaded = $.proxy(function() {
-		$('#url').val(this.player.playlist.permalink_url);
+	player.onPlaylistLoaded = $.proxy(function() {
+		$('#url').val(player.playlist.permalink_url);
 	}, this);
 
-	this.player.onTimedComment = $.proxy(function(comment) {
-		var userComments = $('.user_comments');
-		userComments.text(comment.body);
-		if (commentShowing)
-		{
-			clearTimeout(commentTimeout);
-			commentShowing = false;
-		}
-		else
-		{
-			userComments.fadeIn(0);
-		}
-		commentShowing = true;
-		commentTimeout = setTimeout(function(){
-			userComments.fadeOut(750, function(){
-				commentShowing = false;
-			});
-		}, 2500);
+	player.onPlayPositionChanged = $.proxy(function() {
+		if (userIsSlidingPositionBar) return;
+		var slider = $('.slider');
+		slider.slider( "value", player.getPositionPercent() * slider.slider("option", "max"));
 	}, this);
 }
 
@@ -340,15 +349,15 @@ function loadPlaylistAndShuffle(options)
 	}
 
 	// Solve this in a more elegant way!
-	var wasPlaying = this.player.playing;
+	var wasPlaying = player.playing;
 
 	// Get a shuffled tracklist
-	this.player.loadPlaylist(options, $.proxy(function() {
-		this.player.shuffle();
+	player.loadPlaylist(options, function() {
+		player.shuffle();
 
 		if (options.trackId)
 		{
-			this.player.jumpToTrack(options.trackId);
+			player.jumpToTrack(options.trackId);
 		}
 
 		hideLoader();
@@ -364,5 +373,5 @@ function loadPlaylistAndShuffle(options)
 		{
 			showPlayer();
 		}
-	}, this));
+	});
 }
