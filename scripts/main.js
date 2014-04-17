@@ -282,7 +282,7 @@ function initializePlayer()
 
 	this.player.onPlaylistLoaded = $.proxy(function() {
 		$('#url').val(this.player.playlist.permalink_url);
-	});
+	}, this);
 
 	this.player.onTimedComment = $.proxy(function(comment) {
 		var userComments = $('.user_comments');
