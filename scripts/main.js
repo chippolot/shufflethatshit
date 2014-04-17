@@ -54,7 +54,7 @@ $(document).ready(function()
 
 	// Initialize song position slider
 	$(".slider").slider({
-		animate: true,
+		animate: false,
 		range: "min",
 		value: 0,
 		min: 0,
