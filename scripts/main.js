@@ -95,7 +95,7 @@ function showLoader(firstCall)
 	document.title = getDefaultPageTitle();
 
 	$('.loader').fadeIn(750);
-	//$('.player').fadeOut(firstCall ? 0 : 750);
+	$('.player').fadeOut(firstCall ? 0 : 750);
 	$('.user_comments').hide();
 	$('.control_share').hide();
 }
