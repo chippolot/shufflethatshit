@@ -353,13 +353,27 @@ function loadPlaylistAndShuffle(options)
 	// Solve this in a more elegant way!
 	var wasPlaying = player.playing;
 
+	// TODO Change this so this is deserialized instead of set :p
+	var descriptor = new PlaylistDescriptor();
+	if (options.playlistId)
+	{
+		//descriptor.setPlaylistId(options.playlistId, options.trackId);
+		descriptor.playlistId = options.playlistId;
+		descriptor.trackId = options.trackId;
+	}
+	else
+	{
+		//descriptor.setPermalink(options.playlistPermalink);
+		descriptor.permalink = options.playlistPermalink;
+	}
+
 	// Get a shuffled tracklist
-	player.loadPlaylist(options, function() {
+	player.loadPlaylist(descriptor, function() {
 		player.shuffle();
 
-		if (options.trackId)
+		if (descriptor.trackId)
 		{
-			player.jumpToTrack(options.trackId);
+			player.jumpToTrack(descriptor.trackId);
 		}
 
 		hideLoader();

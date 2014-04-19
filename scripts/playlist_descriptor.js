@@ -4,11 +4,11 @@
 
 	PlaylistDescriptor.prototype = {
 
-		function initialize() {
+		initialize:function() {
 			this.clear();
 		},
 
-		function clear() {
+		clear:function() {
 			this.permalink = null;
 			this.playlistId = null;
 			this.trackId = null;
@@ -16,7 +16,7 @@
 			this.groupId = null;
 		},
 
-		function getPermalink(callback) {
+		getPermalink:function(callback) {
 			var setPermalinkFunc = $.proxy(function(response) {
 				this.permalink = response.permalink_url;
 				callback();
@@ -40,13 +40,13 @@
 			}
 		},
 
-		function getTracklist(callback) {
-			var getTracklistFunc = function(permalink, callback) {
+		getTracklist:function(callback) {
+			var getTracklistFunc = $.proxy(function(permalink, callback) {
 				soundcloud_resolve(permalink, $.proxy(function(response) {
 					console.log("-- getting tracklist", permalink, response);
 					this.__getTracklistForKind(response.kind, response, callback);
 				}, this));
-			};
+			}, this);
 
 			if (this.permalink)
 			{
@@ -55,28 +55,36 @@
 			else
 			{
 				this.getPermalink($.proxy(function() {
-					getTracklistFunc(this.permalink);
+					getTracklistFunc(this.permalink, callback);
 				}, this));
 			}
 		},
 
-		function __getTracklistForKind(kind, response, callback) {
+		__getTracklistForKind:function(kind, response, callback) {
 			switch (response.kind)
 			{
 				case "user":
+					this.userId = response.id;
+
 					var suffix = response.track_count > 0 ? "/tracks" : "/favorites";
 					soundcloud_resolve(stripTrailingSlash(this.permalink)+suffix, function(r) { callback(r) });
 				break;
 
 				case "playlist":
+					this.playlistId = response.id;
+
 					callback(response.tracks);
 				break;
 
 				case "group":
+					this.groupId = response.id;
+
 					soundcloud_resolve(stripTrailingSlash(this.permalink)+"/tracks", function(r) { callback(r) });
 				break;
 
 				case "track":
+					this.trackId = response.id;
+
 					callback([response]);
 				break;
 			}

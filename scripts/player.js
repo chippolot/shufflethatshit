@@ -5,52 +5,6 @@
 	Player.prototype = {
 		// Private 
 		///////////////////////////////////////////////////////////////////////////
-		__loadPlaylistInternal:function(options, callback) {
-			if (options.playlistPermalink)
-			{
-				soundcloud_resolve_playlist_id(options.playlistPermalink, $.proxy(function(playlistId) {
-					options.playlistId = playlistId;
-					options.playlistPermalink = null;
-					this.loadPlaylist(options, callback);
-				}, this));
-				return;
-			}
-
-			// Get a list of tracks in the playlist
-			soundcloud_get_playlist(options.playlistId, $.proxy(function(playlist) {
-				console.log("-- got playlist data", playlist);
-
-				// Create new playlist
-				this.playlist = {};
-				this.playlist.permalink_url = playlist.permalink_url;
-				this.playlist.id = options.playlistId;
-
-				// Save track data
-				this.playlist.trackData = {};
-				jQuery.each(playlist.tracks, $.proxy(function(index, track) {
-					this.playlist.trackData[track.id] = jQuery.extend(true, {}, track);
-				},this));
-
-				// Grab track ids
-				var tracklist = jQuery.map(playlist.tracks, function(track) {
-					return track.id;
-				});
-
-				// Save off tracklist
-				this.playlist.tracklist = tracklist;
-
-				// Finished!
-				console.log("-- loaded playlist:", this.playlist);
-
-				if (this.onPlaylistLoaded)
-				{
-					this.onPlaylistLoaded();
-				}
-
-				callback();
-			}, this));
-		},
-
 		__loadCurrentTrack:function(callback)
 		{
 			var trackId = this.playlist.tracklist[this.currentTrackIndex];
@@ -111,9 +65,38 @@
 		},
 
 		loadPlaylist:function(descriptor, callback) {
-			descriptor.resolvePermalink($.proxy({
+			descriptor.getTracklist($.proxy(function(tracks) {
+				console.log("-- got playlist data", tracks);
 
-			},this));
+				// Create new playlist
+				this.playlist = {};
+				this.playlist.permalink_url = descriptor.permalink;
+				this.playlist.id = descriptor.playlistId;
+
+				// Save track data
+				this.playlist.trackData = {};
+				jQuery.each(tracks, $.proxy(function(index, track) {
+					this.playlist.trackData[track.id] = jQuery.extend(true, {}, track);
+				},this));
+
+				// Grab track ids
+				var tracklist = jQuery.map(tracks, function(track) {
+					return track.id;
+				});
+
+				// Save off tracklist
+				this.playlist.tracklist = tracklist;
+
+				// Finished!
+				console.log("-- loaded playlist:", this.playlist);
+
+				if (this.onPlaylistLoaded)
+				{
+					this.onPlaylistLoaded();
+				}
+
+				callback();
+			}, this));
 		},
 
 		loadTrack:function(){
