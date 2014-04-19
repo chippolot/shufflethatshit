@@ -17,6 +17,9 @@ $(document).ready(function()
 	$('.control_pause').hide();
 	$('.share_container').fadeOut(0);
 
+	// Initialize the soundcloud api
+	soundcloud_initialize("aa4e45fd3130de0246b5ba7c0c72a67e");
+
 	// Initialize the player
 	initializePlayer();
 
@@ -274,7 +277,6 @@ function initializePlayer()
 	console.log("-- initializing player");
 
 	player = new Player();
-	player.initialize("aa4e45fd3130de0246b5ba7c0c72a67e");
 
 	player.onTrackLoaded = $.proxy(function() {
 		var songInfoDiv = $('.song_info');

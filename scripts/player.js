@@ -1,33 +1,14 @@
 (function(){
 	
-	this.Player = function() {};
+	this.Player = function() { this.initialize(); };
 
 	Player.prototype = {
 		// Private 
 		///////////////////////////////////////////////////////////////////////////
-
-		__getSoundCloudId:function(permalink, callback) {
-			console.log("-- getting soundcloud id for: ", permalink);
-			var resolve = "http://api.soundcloud.com/resolve.json?client_id="+this.clientId+"&url=";
-			var request = new XMLHttpRequest();
-			request.onreadystatechange = function(){
-				if (this.readyState === 4 && this.responseText) {
-					var response = JSON.parse(this.responseText);
-					if (response.id) 
-					{
-						console.log("-- found soundcloud id:", response.id);
-						callback(response.id);
-					}
-				}
-			};
-			request.open('get', resolve+permalink, true);
-			request.send();
-		},
-
 		__loadPlaylistInternal:function(options, callback) {
 			if (options.playlistPermalink)
 			{
-				this.__getSoundCloudId(options.playlistPermalink, $.proxy(function(playlistId) {
+				soundcloud_resolve_playlist_id(options.playlistPermalink, $.proxy(function(playlistId) {
 					options.playlistId = playlistId;
 					options.playlistPermalink = null;
 					this.loadPlaylist(options, callback);
@@ -35,13 +16,8 @@
 				return;
 			}
 
-			// Build playlist string
-			var playlistString = "/playlists/"+options.playlistId;
-
-			console.log("-- requesting tracks from playlist", options.playlistId);
-
 			// Get a list of tracks in the playlist
-			SC.get(playlistString, $.proxy(function(playlist) {
+			soundcloud_get_playlist(options.playlistId, $.proxy(function(playlist) {
 				console.log("-- got playlist data", playlist);
 
 				// Create new playlist
@@ -80,16 +56,7 @@
 			var trackId = this.playlist.tracklist[this.currentTrackIndex];
 			console.log("-- Loading track at index", trackId, this.currentTrackIndex);
 
-			SC.stream("/tracks/" + trackId, {
-				useHTML5Audio: true,
-				preferFlash: false,
-				/*ontimedcomments: $.proxy(function(comments){
-					console.log("-- timed comment", comments[0]);
-					if (this.onTimedComment)
-					{
-						this.onTimedComment(comments[0]);
-					}
-				}, this),*/
+			soundcloud_stream(trackId, {
 				onfinish: $.proxy(function() {
 					this.trackLoaded = false;
 					this.next();
@@ -121,9 +88,8 @@
 
 		// Public 
 		///////////////////////////////////////////////////////////////////////////
-		initialize:function(clientId) {
+		initialize:function() {
 			// Player internal variables
-			this.clientId = clientId;
 			this.playlist = null;
 			this.currentTrackManagerId;
 			this.currentTrackIndex = 0;
@@ -140,11 +106,6 @@
 			this.onPlaylistLoaded = null;
 			this.onTimedComment = null;
 			this.onPlayPositionChanged = null;
-
-			// Initialize Sound Cloud
-			SC.initialize({
-				client_id: this.clientId
-			});
 
 			console.log("-- player initialization complete");
 		},
