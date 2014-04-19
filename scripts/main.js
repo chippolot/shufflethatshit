@@ -172,15 +172,15 @@ function fillPlaylistInputFromUrl()
 {
 	console.log("-- checking url for saved playlist descriptor");
 
-	var playlistParam = getUrlParameter("playlist");
+	var permalinkParam = getUrlParameter("playlist") || getUrlParameter("permalink");
 	var hash = getUrlHash();
 
 	// First check for playlist param
-	if (playlistParam)
+	if (permalinkParam)
 	{
-		console.log("-- found playlist query parameter", playlistParam);
+		console.log("-- found permalink query parameter", permalinkParam);
 
-		var playlistPermalink = atob(playlistParam);
+		var playlistPermalink = atob(permalinkParam);
 
 		currentPlaylistDescriptor = new PlaylistDescriptor();
 		currentPlaylistDescriptor.deserializePermalink(playlistPermalink);
