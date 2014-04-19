@@ -7,21 +7,31 @@ function assert(condition, message)
     }
 }
 
-function getUrlParameter(name) {
-    return decodeURI(
+function getUrlParameter(name) 
+{
+    var param = decodeURI(
         (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
     );
+    return stringNotEmpty(param) ? param : null;
 }
 
-function getUrlHash() {
-    return $(location).attr('hash').substring(1);
+function getUrlHash() 
+{
+    var hash = $(location).attr('hash').substring(1);
+    return stringNotEmpty(hash) ? hash : null;
 }
 
-function stripTrailingSlash(str) {
+function stripTrailingSlash(str) 
+{
     if(str.substr(-1) == '/') {
         return str.substr(0, str.length - 1);
     }
     return str;
+}
+
+function stringNotEmpty(str)
+{
+    return str && str != "" && str != "null";
 }
 
 function wrap(x, m) 
@@ -46,7 +56,7 @@ function createCookie(cookieId, value, days)
 
 function getCookie(cookieId) 
 {
-    console.log("Reading cookie: ", cookieId);
+    console.log("-- reading cookie: ", cookieId);
     if (document.cookie.length > 0) {
         c_start = document.cookie.indexOf(cookieId + "=");
         if (c_start != -1) {

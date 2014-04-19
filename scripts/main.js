@@ -1,6 +1,6 @@
 var offline_mode = document.location.hostname == "localhost";
 
-var lastPlaylistCookieId = "shuffle_that_shit_last_playlist";
+var lastPlaylistCookieId = "shuffle_that_shit_playlist_descriptor";
 var defaultPlaylistInputText = false;
 var currentPlaylistPermalink = null;
 var player = null;
@@ -9,6 +9,8 @@ var userIsSlidingPositionBar = false;
 
 var commentShowing = false;
 var commentTimeout;
+
+var currentPlaylistDescriptor = null;
 
 $(document).ready(function()
 {
@@ -23,15 +25,19 @@ $(document).ready(function()
 	// Initialize the player
 	initializePlayer();
 
-	// Look for a playlist url either in the page url or as a saved cookie
-	var foundPlaylist = fillPlaylistInputFromUrl();
-	if (!foundPlaylist)
+	// Look for a playlist url either in the page url hash or as a saved cookie
+	if (!fillPlaylistInputFromUrl())
 	{
-		foundPlaylist = fillPlaylistInputFromCookie();
+		fillPlaylistInputFromCookie();
 	}
 
-	// Make the default playlist input text transparent if nothing was found
-	if (!foundPlaylist)
+	// Set the playlist url input box if we successfully deserialized a playlist descriptor
+	if (currentPlaylistDescriptor && currentPlaylistDescriptor.permalink)
+	{
+		$('#url').val(currentPlaylistDescriptor.permalink);
+	}
+	// Otherwise, set up the default text
+	else
 	{
 		var urlInputDiv = $(".url_input_box");
 		urlInputDiv.css("color", "rgba(255, 173, 215, 0.5)");
@@ -164,56 +170,49 @@ function transitionToPlayerMode()
 
 function fillPlaylistInputFromUrl()
 {
-	console.log("-- checking url for playlist");
+	console.log("-- checking url for saved playlist descriptor");
+
+	var playlistParam = getUrlParameter("playlist");
+	var hash = getUrlHash();
 
 	// First check for playlist param
-	var playlistParam = getUrlParameter("playlist");
-	if (playlistParam && playlistParam != "" && playlistParam != "null")
+	if (playlistParam)
 	{
-		console.log("-- found playlist param", playlistParam);
+		console.log("-- found playlist query parameter", playlistParam);
 
-		if (getUrlParameter("encoding") != "base64")
-		{
-			return false;
-		}
 		var playlistPermalink = atob(playlistParam);
-		$('#url').val(playlistPermalink);
-		if (!isMobileDevice)
-		{
-			loadPlaylistAndShuffle({
-				playlistPermalink:playlistPermalink
-			});
-		}
-		return true;
-	}
 
+		currentPlaylistDescriptor = new PlaylistDescriptor();
+		currentPlaylistDescriptor.deserializePermalink(playlistPermalink);
+	}
 	// Then check for playlist hash
-	var hash = getUrlHash();
-	if (hash && hash != "" && hash != "null")
+	else if (hash)
 	{
-		var tokens = hash.split('/');
-		console.log("-- Reading url hash", hash, tokens);
-		if (!isMobileDevice)
-		{
-			loadPlaylistAndShuffle({
-				playlistId:tokens[0],
-				trackId:tokens[1]
-			});
-		}
-		return true;
+		console.log("-- found url hash", hash);
+
+		currentPlaylistDescriptor = new PlaylistDescriptor();
+		currentPlaylistDescriptor.deserializeHash(hash);
 	}
 
-	return false;
+	// Start playing if we deserialized a descriptor and we're not on a mobile device
+	if (!isMobileDevice && currentPlaylistDescriptor)
+	{
+		loadPlaylistAndShuffle(currentPlaylistDescriptor);
+	}
+	return currentPlaylistDescriptor != null;
 }
 
 function fillPlaylistInputFromCookie()
 {
-	console.log("-- remembering last shuffled playlist");
+	console.log("-- checking cookie for saved playlist descriptor");
 
-	var lastPlaylist = getCookie(lastPlaylistCookieId)
-	if (lastPlaylist != "")
+	var lastPlaylistDescriptorJSON = getCookie(lastPlaylistCookieId)
+	if (lastPlaylistDescriptorJSON != "")
 	{
-		$('#url').val(lastPlaylist);
+		console.log("-- found cookie", lastPlaylistDescriptorJSON);
+
+		currentPlaylistDescriptor = new PlaylistDescriptor();
+		currentPlaylistDescriptor.deserializeJSON(lastPlaylistDescriptorJSON);
 		return true;
 	}
 	return false;
@@ -277,6 +276,7 @@ function initializePlayer()
 	console.log("-- initializing player");
 
 	player = new Player();
+	playlistDescriptor = new PlaylistDescriptor();
 
 	player.onTrackLoaded = $.proxy(function() {
 		var songInfoDiv = $('.song_info');
@@ -294,11 +294,13 @@ function initializePlayer()
 		}
 		playerDiv.css("background-image", backgroundImageValue);
 
-		window.location.hash = player.playlist.id + "/" + currentTrack.id;
+		currentPlaylistDescriptor.trackId = currentTrack.id;
+
+		window.location.hash = currentPlaylistDescriptor.serializeHash();
 
 		var newUrl = 'http://'+window.location.host;
 		newUrl += window.location.pathname.indexOf('/testing') == 0 ? '/testing/' : '/';
-		newUrl += '#'+player.playlist.id + '/' + currentTrack.id;
+		newUrl += window.location.hash;
 		history.pushState({}, null, newUrl);
 		document.title = currentTrack.title + " : " + getDefaultPageTitle();
 
@@ -306,7 +308,7 @@ function initializePlayer()
 	}, this);
 
 	player.onPlaylistLoaded = $.proxy(function() {
-		$('#url').val(player.playlist.permalink_url);
+		$('#url').val(currentPlaylistDescriptor.permalink);
 	}, this);
 
 	player.onPlayPositionChanged = $.proxy(function() {
@@ -316,14 +318,12 @@ function initializePlayer()
 	}, this);
 }
 
-function loadPlaylistAndShuffle(options)
+function loadPlaylistAndShuffle(descriptor)
 {
-	console.log("-- clicked shuffle playlist button", options);
-
-	options = options || {};
+	console.log("-- clicked shuffle playlist button", descriptor);
 
 	// If no playlist url was passed in, read it from the input box
-	if (!options.playlistId && !options.playlistPermalink)
+	if (!descriptor)
 	{
 		// Need valid URL
 		if ($('#url').val() == "")
@@ -332,11 +332,13 @@ function loadPlaylistAndShuffle(options)
 		}
 
 		// Get the playlist id from the permalink
-	    options.playlistPermalink = $('#url').val();
-		createCookie(lastPlaylistCookieId, options.playlistPermalink, 365);
+		descriptor = new PlaylistDescriptor();
+	    descriptor.deserializePermalink($('#url').val());
 
-		currentPlaylistPermalink = options.playlistPermalink;
+		currentPlaylistPermalink = descriptor.permalink;
 	}
+
+	currentPlaylistDescriptor = descriptor;
 
 	// Show a cool loading screen
 	showLoader();
@@ -353,22 +355,10 @@ function loadPlaylistAndShuffle(options)
 	// Solve this in a more elegant way!
 	var wasPlaying = player.playing;
 
-	// TODO Change this so this is deserialized instead of set :p
-	var descriptor = new PlaylistDescriptor();
-	if (options.playlistId)
-	{
-		//descriptor.setPlaylistId(options.playlistId, options.trackId);
-		descriptor.playlistId = options.playlistId;
-		descriptor.trackId = options.trackId;
-	}
-	else
-	{
-		//descriptor.setPermalink(options.playlistPermalink);
-		descriptor.permalink = options.playlistPermalink;
-	}
-
 	// Get a shuffled tracklist
-	player.loadPlaylist(descriptor, function() {
+	player.loadPlaylist(currentPlaylistDescriptor, function() {
+		createCookie(lastPlaylistCookieId, currentPlaylistDescriptor.serializeJSON(), 365);
+
 		player.shuffle();
 
 		if (descriptor.trackId)
