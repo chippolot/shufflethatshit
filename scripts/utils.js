@@ -17,6 +17,13 @@ function getUrlHash() {
     return $(location).attr('hash').substring(1);
 }
 
+function stripTrailingSlash(str) {
+    if(str.substr(-1) == '/') {
+        return str.substr(0, str.length - 1);
+    }
+    return str;
+}
+
 function wrap(x, m) 
 {
     return (x%m + m)%m;

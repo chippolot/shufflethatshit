@@ -12,11 +12,32 @@ function soundcloud_initialize(clientId)
 	});
 }
 
-function soundcloud_get_playlist(playlistId, callback)
+function soundcloud_get_playlist(id, callback)
 {
-	console.log("-- getting playlist data: ", playlistId);
+	console.log("-- getting playlist data: ", id);
 
-	SC.get("/playlists/" + playlistId, callback);
+	SC.get("/playlists/" + id, callback);
+}
+
+function soundcloud_get_user(id, callback)
+{
+	console.log("-- getting user data: ", id);
+
+	SC.get("/users/" + id, callback);
+}
+
+function soundcloud_get_track(id, callback)
+{
+	console.log("-- getting track data: ", id);
+
+	SC.get("/tracks/" + id, callback);
+}
+
+function soundcloud_get_group(id, callback)
+{
+	console.log("-- getting group data: ", id);
+
+	SC.get("/groups/" + id, callback);
 }
 
 function soundcloud_resolve(permalink, callback)

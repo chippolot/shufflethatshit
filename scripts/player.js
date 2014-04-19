@@ -110,9 +110,10 @@
 			console.log("-- player initialization complete");
 		},
 
-		loadPlaylist:function(options, callback) {
-			options = jQuery.extend(true, {}, options);
-			this.__loadPlaylistInternal(options, callback);
+		loadPlaylist:function(descriptor, callback) {
+			descriptor.resolvePermalink($.proxy({
+
+			},this));
 		},
 
 		loadTrack:function(){
