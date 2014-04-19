@@ -53,6 +53,13 @@ body{
 	overflow: hidden;
 }
 
+a { text-decoration: none !important; }
+a:link {color:#ffffff;}      /* unvisited link */
+a:visited {color:#ffffff;}  /* visited link */
+a:hover {color:rgb(255, 221, 33);}  /* mouse over link */
+a:active {color:rgb(255, 221, 33);}  /* selected link */
+
+
 .container
 {
 	width: 100%;
@@ -165,12 +172,6 @@ body{
 	overflow: hidden;
   	text-overflow: ellipsis;
 }
-
-.song_info a { text-decoration: none !important; }
-.song_info a:link {color:#ffffff;}      /* unvisited link */
-.song_info a:visited {color:#ffffff;}  /* visited link */
-.song_info a:hover {color:rgb(255, 221, 33);}  /* mouse over link */
-.song_info a:active {color:rgb(255, 221, 33);}  /* selected link */
 
 .shuffle_controls
 {
