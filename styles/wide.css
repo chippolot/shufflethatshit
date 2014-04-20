@@ -35,3 +35,14 @@
     width: calc(100% - 60px);
     font-size: 20px;
 }
+
+.slider 
+{
+	top:42px;
+	height:8px;
+}
+
+.big_play_button
+{
+	display:none;
+}

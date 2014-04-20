@@ -52,6 +52,11 @@ $(document).ready(function()
 		}
 	});
 
+	if (isMobileDevice)
+	{	
+		$('.controls').fadeOut(0);
+	}
+
 	// Add touch swipe handlers
 	$(".player").touchwipe({
 	     wipeLeft: function() { next(); },
@@ -114,7 +119,11 @@ function showPlayer()
 	$('.player').fadeIn(750);
 	$('.user_comments').show();
 	$('.user_comments').fadeOut(0);
-	$('.control_share').show();
+
+	if (!isMobileDevice)
+	{
+		$('.control_share').show();
+	}
 }
 
 function showSharePanel()
@@ -195,7 +204,7 @@ function fillPlaylistInputFromUrl()
 	}
 
 	// Start playing if we deserialized a descriptor and we're not on a mobile device
-	if (!isMobileDevice && currentPlaylistDescriptor)
+	if (currentPlaylistDescriptor)
 	{
 		loadPlaylistAndShuffle(currentPlaylistDescriptor);
 	}
@@ -253,6 +262,8 @@ function play()
 	player.play();
 	$('.control_play').hide();
 	$('.control_pause').show();
+	$('.big_play_button').fadeOut(250);
+	$('.controls').fadeIn(250);
 }
 
 function pause()
