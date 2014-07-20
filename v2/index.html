@@ -16,10 +16,26 @@
 	<link href='http://fonts.googleapis.com/css?family=Cantarell:700italic,100,400' rel='stylesheet' type='text/css'/>
 	<link href='http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet' type='text/css'/>
 
+    <!-- Shared Styles -->
+
     <!-- Styles -->
     <link rel="stylesheet" type="text/css" href="styles/gridiculous.css"/>
     <link rel="stylesheet" type="text/css" href="styles/styles.css"/>
     <link rel="stylesheet" type="text/css" href="styles/sts-styles.css"/>
+
+    <!-- Shared Scripts -->
+    <script src="http://connect.soundcloud.com/sdk.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="scripts/libs/jquery.touchwipe.min.js"></script>
+
+    <!-- Scripts -->
+    <script src='scripts/mobile_check.js'></script>
+    <script src='scripts/utils.js'></script>
+    <script src='scripts/soundcloud_helpers.js'></script>
+    <script src='scripts/playlist_descriptor.js'></script>
+    <script src='scripts/player.js'></script>
+    <script src='scripts/main.js'></script>
+
   </head>
   <body>
   	<!-- Header -->
@@ -28,8 +44,9 @@
 
     <!-- Content -->
     <div class="content">
-    	<div class="test-bg fill background-cover filter-blur"></div>
-    	<div class="test-bg fill background-contain"></div>
+    	<div class="sts-player sts-song-image fill background-cover filter-blur"></div>
+    	<div class="sts-player sts-song-image fill background-contain"></div>
+        <div class="sts-loader fill background-cover"></div>
     </div>
 
     <!-- Footer -->
@@ -41,12 +58,12 @@
 				</a>
     		</div>
     		<div class="c4 text-center selection-disabled">
-				<p class="align-vertical-center">
+				<div class="sts-footer-text">
 					<a href="https://soundcloud.com/ben-smith-58">. ben smith 2014 .</a>
-				</p>
+				</div>
     		</div>
     		<div class="c4 text-right selection-disabled">
-				<p class="align-vertical-center">thanks erin!</p>
+				<div class="sts-footer-text">thanks erin!</div>
     		</div>
     	</div>
     </div>

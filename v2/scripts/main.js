@@ -1,23 +1,13 @@
 var offline_mode = document.location.hostname == "localhost";
 
 var lastPlaylistCookieId = "shuffle_that_shit_playlist_descriptor";
-var defaultPlaylistInputText = false;
-var currentPlaylistPermalink = null;
 var player = null;
-var firstPlay = true;
-var userIsSlidingPositionBar = false;
-
-var commentShowing = false;
-var commentTimeout;
-
 var currentPlaylistDescriptor = null;
 
 $(document).ready(function()
 {
-	// Prepare page elements
+	// Show the page loader
 	showLoader(true);
-	$('.control_pause').hide();
-	$('.share_container').fadeOut(0);
 
 	// Initialize the soundcloud api
 	soundcloud_initialize("aa4e45fd3130de0246b5ba7c0c72a67e");
@@ -31,30 +21,10 @@ $(document).ready(function()
 		fillPlaylistInputFromCookie();
 	}
 
-	// Set the playlist url input box if we successfully deserialized a playlist descriptor
-	if (currentPlaylistDescriptor && currentPlaylistDescriptor.permalink)
+	// Start playing if we deserialized a descriptor and we're not on a mobile device
+	if (currentPlaylistDescriptor)
 	{
-		$('#url').val(currentPlaylistDescriptor.permalink);
-	}
-	// Otherwise, set up the default text
-	else
-	{
-		var urlInputDiv = $(".url_input_box");
-		urlInputDiv.css("color", "rgba(255, 173, 215, 0.5)");
-		defaultPlaylistInputText = true;
-	}
-
-	// Listen for the enter key in the playlist submission input box
-	$(".url_input_box").keypress(function(event) {
-		if (event.which == 13) {
-			event.preventDefault();
-			loadPlaylistAndShuffle();
-		}
-	});
-
-	if (isMobileDevice)
-	{	
-		$('.controls').fadeOut(0);
+		loadPlaylistAndShuffle(currentPlaylistDescriptor);
 	}
 
 	// Add touch swipe handlers
@@ -66,33 +36,10 @@ $(document).ready(function()
 	     preventDefaultEvents: true
 	});
 
-	// Initialize song position slider
-	$(".slider").slider({
-		animate: false,
-		range: "min",
-		value: 0,
-		min: 0,
-		max: 1000,
-		step: 1,
-
-		//user starts sliding the bar
-		start: function( event, ui ) {
-			userIsSlidingPositionBar = true;
-		},	
-
-		// user stops sliding the bar
-		stop: function( event, ui ) {
-			userIsSlidingPositionBar = false;
-			player.setPositionPercent(ui.value/1000.0);
-		}
-	});
-
-
 	console.log("-- initialization complete");
 })
 
-// Page Control
-///////////////////////////////////////////////////////////////////////////////
+// Page Control ///////////////////////////////////////////////////////////////
 
 function getDefaultPageTitle()
 {
@@ -101,82 +48,45 @@ function getDefaultPageTitle()
 
 function hideLoader()
 {
-	$('.loader').fadeOut(750);
+	$('.sts-loader').fadeOut(750);
 }
 
 function showLoader(firstCall)
 {
 	document.title = getDefaultPageTitle();
 
-	$('.loader').fadeIn(750);
-	$('.player').fadeOut(firstCall ? 0 : 750);
-	$('.user_comments').hide();
-	$('.control_share').hide();
+	$('.sts-loader').fadeIn(750);
+	$('.sts-player').fadeOut(firstCall ? 0 : 750);
 }
 
 function showPlayer()
 {
-	$('.player').fadeIn(750);
-	$('.user_comments').show();
-	$('.user_comments').fadeOut(0);
-
-	if (!isMobileDevice)
-	{
-		$('.control_share').show();
-	}
+	$('.sts-player').fadeIn(750);
 }
 
-function showSharePanel()
+// Player Controls
+///////////////////////////////////////////////////////////////////////////////
+function previous()
 {
-	$('.share_container').fadeIn(500, function() {
-		$('html').click(function() {
-		    hideSharePanel();
-		});
-		$('.share_panel').click(function(event){
-		    event.stopPropagation();
-		});
-	});
-
-	$('#share_link').focus();
-	$('#share_link').select();
+	player.previous();
 }
 
-function hideSharePanel()
+function play()
 {
-	$('.share_container').fadeOut(500);
-	$('.share_panel').unbind('click');
-	$('html').unbind('click');
+	player.play();
 }
 
-function transitionToPlayerMode() 
+function pause()
 {
-	console.log("-- transitioning to player mode");
-
-	var transitionDuration = isMobileDevice ? 0 : 1000;
-
-	var shuffleControlsDiv = $('.shuffle_controls');
-	var bottomBarDiv = $('.bottom_bar');
-	shuffleControlsDiv.animate({
-		top: $(window).height() - shuffleControlsDiv.outerHeight() - bottomBarDiv.outerHeight()
-	}, {
-		duration:transitionDuration,
-		complete:function() {
-			var calcString = "calc(100% - "+ (shuffleControlsDiv.outerHeight() + bottomBarDiv.outerHeight()) +"px)";
-			shuffleControlsDiv.css("top", calcString);
-		}
-	});
-
-	var titleDiv = $('.page_title');
-	titleDiv.animate({
-		top: -titleDiv.outerHeight()
-	}, {
-		duration:transitionDuration,
-		complete:function() {
-			titleDiv.hide();
-		}
-	});
+	player.pause();
 }
 
+function next()
+{
+	player.next();
+}
+
+// Soundcloub /////////////////////////////////////////////////////////////////
 function fillPlaylistInputFromUrl()
 {
 	console.log("-- checking url for saved playlist descriptor");
@@ -202,12 +112,6 @@ function fillPlaylistInputFromUrl()
 		currentPlaylistDescriptor = new PlaylistDescriptor();
 		currentPlaylistDescriptor.deserializeHash(hash);
 	}
-
-	// Start playing if we deserialized a descriptor and we're not on a mobile device
-	if (currentPlaylistDescriptor)
-	{
-		loadPlaylistAndShuffle(currentPlaylistDescriptor);
-	}
 	return currentPlaylistDescriptor != null;
 }
 
@@ -227,71 +131,15 @@ function fillPlaylistInputFromCookie()
 	return false;
 }
 
-function onClickPlaylistInput()
-{
-	if (!defaultPlaylistInputText)
-	{
-		return;
-	}
-
-	defaultPlaylistInputText = false;
-	var urlInputDiv = $(".url_input_box");
-	urlInputDiv.css("color", "rgb(255, 173, 215)");
-	urlInputDiv.val("");
-}
-
-function share()
-{
-	console.log("-- showing share panel");
-
-	var shareUrl = window.location.href;
-	$('#share_link').val(shareUrl);
-
-	showSharePanel();
-}
-
-// Player Controls
-///////////////////////////////////////////////////////////////////////////////
-function previous()
-{
-	player.previous();
-}
-
-function play()
-{
-	player.play();
-	$('.control_play').hide();
-	$('.control_pause').show();
-	$('.big_play_button').fadeOut(250);
-	$('.controls').fadeIn(250);
-}
-
-function pause()
-{
-	player.pause();
-	$('.control_play').show();
-	$('.control_pause').hide();
-}
-
-function next()
-{
-	player.next();
-}
-
-// Sound Cloud
-///////////////////////////////////////////////////////////////////////////////
-
-
 function initializePlayer()
 {
 	console.log("-- initializing player");
 
 	player = new Player();
-	playlistDescriptor = new PlaylistDescriptor();
 
 	player.onTrackLoaded = $.proxy(function() {
-		var songInfoDiv = $('.song_info');
-		var playerDiv = $('.player');
+		var songInfoDiv = $('.sts-song_info');
+		var songBackgroundDiv = $('.sts-song-image');
 		var currentTrack = player.currentTrack;
 
 		var songTitleLink = '<a target="_blank" href="'+currentTrack.permalink_url+'">'+currentTrack.title+'</a>';
@@ -303,7 +151,7 @@ function initializePlayer()
 			var artwork_url = currentTrack.artwork_url.replace('large.jpg', 't500x500.jpg');
 			backgroundImageValue = "url("+artwork_url+")";
 		}
-		playerDiv.css("background-image", backgroundImageValue);
+		songBackgroundDiv.css("background-image", backgroundImageValue);
 
 		currentPlaylistDescriptor.trackId = currentTrack.id;
 
@@ -323,9 +171,7 @@ function initializePlayer()
 	}, this);
 
 	player.onPlayPositionChanged = $.proxy(function() {
-		if (userIsSlidingPositionBar) return;
-		var slider = $('.slider');
-		slider.slider( "value", player.getPositionPercent() * slider.slider("option", "max"));
+		// TODO: Slider functionality
 	}, this);
 }
 
@@ -353,15 +199,6 @@ function loadPlaylistAndShuffle(descriptor)
 
 	// Show a cool loading screen
 	showLoader();
-
-	// Perform some animation on the first play
-	if (firstPlay)
-	{
-		firstPlay = false;
-
-		// Animate the shuffle controls down
-		transitionToPlayerMode();
-	}
 
 	// Solve this in a more elegant way!
 	var wasPlaying = player.playing;

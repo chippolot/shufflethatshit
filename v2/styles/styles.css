@@ -26,11 +26,6 @@ a:visited {color:rgba(255, 255, 255, 1);}  /* visited link */
 a:hover {color:rgb(255, 221, 33);}  /* mouse over link */
 a:active {color:rgb(255, 221, 33);}  /* selected link */
 
-/* Tests */
-.test-bg {
-	background-image: url("http://4.bp.blogspot.com/-ulccXu67lCI/Uh3Di6eteTI/AAAAAAAABwE/io4HtxeZUTk/s1600/575200_550172201687130_1403430047_n.jpg");
-}
-
 /* Text Transformations */
 .text-left {
   text-align: left;
@@ -43,13 +38,6 @@ a:active {color:rgb(255, 221, 33);}  /* selected link */
 }
 .text-justify {
   text-align: justify;
-}
-
-/* Content Alignment */
-.align-vertical-center {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
 }
 
 /* Image transformations */
@@ -65,13 +53,18 @@ a:active {color:rgb(255, 221, 33);}  /* selected link */
 	background-position: 50% 50%;
 }
 
+.background-fill {
+	background-size: 100% 100%;
+}
+
 /* Page blocks */
 .header {
     width:100%;
     top:0px;
     left:0px;
     background-color: rgba(0, 0, 0, 0.6);
-    height: 30px;
+    max-height: 30px;
+    height:30px;
     position:absolute;
 }
 
