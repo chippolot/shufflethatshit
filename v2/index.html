@@ -71,19 +71,11 @@
 
             <!-- Phone/Tablet Controls -->
             <div class="visible-xs fill">
-                <div class="grid wfull selection-disabled fill">
-                    <div class="c3 sts-control sts-control-hide-during-play" onclick="previous()">
-                        <div class="sts-control-icon align-vertical-center">&#xf04a;</div>              <!-- Previous -->
+                <div class="selection-disabled fill">
+                    <div class="sts-control sts-control-hide-during-play sts-control-background" onclick="play()">
+                        <div class="align-vertical-center">&#xf04b;</div>              <!-- Play -->
                     </div>
-                    <div class="c6 sts-control sts-control-hide-during-play" onclick="play()">
-                        <div class="sts-control-icon align-vertical-center">
-                            <div class="sts-control-pause">&#xf04b;</div>                               <!-- Play -->
-                        </div>
-                    </div>  
-                    <div class="c3 sts-control sts-control-hide-during-play" onclick="next()">
-                        <div class="sts-control-icon align-vertical-center">&#xf04e;</div>              <!-- Next -->
-                    </div>  
-                    <div class="c12 sts-control sts-control-hide-during-pause" onclick="pause()"></div> <!-- Pause -->
+                    <div class="sts-control sts-control-hide-during-pause" onclick="pause()"></div> <!-- Pause -->
                 </div>
             </div>
         </div>
@@ -101,19 +93,28 @@
     <!-- Footer -->
     <div class="footer">
     	<div class="grid wfull">
-    		<div class="c4 content-left">
-    			<a href="http://www.soundcloud.com">
-					<img src="http://developers.soundcloud.com/assets/powered_by_white-7ee4327cfbe5d678897edf6b6c5dd30f.png" style="height:100%;"/>
-				</a>
-    		</div>
-    		<div class="c4 text-center selection-disabled">
-				<div class="sts-footer-text">
-					<a href="https://soundcloud.com/ben-smith-58">. ben smith 2014 .</a>
-				</div>
-    		</div>
-    		<div class="c4 text-right selection-disabled">
-				<div class="sts-footer-text">thanks erin!</div>
-    		</div>
+            <!-- Tablet/Desktop Footer -->
+            <div class="fill visible-sm visible-md">
+        		<div class="c4 content-left">
+        			<a href="http://www.soundcloud.com">
+    					<img src="http://developers.soundcloud.com/assets/powered_by_white-7ee4327cfbe5d678897edf6b6c5dd30f.png" style="height:100%;"/>
+    				</a>
+        		</div>
+        		<div class="c4 text-center selection-disabled">
+    				<div class="sts-footer-text">
+    					<a href="https://soundcloud.com/ben-smith-58">. ben smith 2014 .</a>
+    				</div>
+        		</div>
+        		<div class="c4 text-right selection-disabled">
+    				<div class="sts-footer-text">thanks erin!</div>
+        		</div>
+            </div>
+            <!-- Phone Footer -->
+            <div class="fill visible-xs">
+                <a href="http://www.soundcloud.com">
+                    <img src="http://developers.soundcloud.com/assets/powered_by_white-7ee4327cfbe5d678897edf6b6c5dd30f.png" style="height:100%;"/>
+                </a>
+            </div>
     	</div>
     </div>
 

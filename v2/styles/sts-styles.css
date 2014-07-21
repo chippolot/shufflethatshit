@@ -10,6 +10,10 @@
 
 .sts-controls {
 	height:100%;
+    white-space: nowrap;
+	text-align: center;
+	font-family: 'FontAwesome', sans-serif;
+	font-size: 80px;
 }
 
 .sts-control {
@@ -18,15 +22,15 @@
 }
 
 .sts-control-icon {
-    white-space: nowrap;
-	text-align: center;
-	font-family: 'FontAwesome', sans-serif;
-	font-size: 80px;
 	display:none;
 }
 
 .sts-control:hover {
 	background: rgba(0, 0, 0, 0.3);
+}
+
+.sts-control-background {
+	background: rgba(0, 0, 0, 0.3);	
 }
 
 .sts-control:hover .sts-control-icon {

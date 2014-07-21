@@ -33,6 +33,13 @@ a:active {color:rgb(255, 221, 33);}  /* selected link */
 	transform: translateY(-50%);
 }
 
+.align-horizontal-center {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+}
+
 /* Text Transformations */
 .text-left {
   text-align: left;
@@ -133,12 +140,12 @@ a:active {color:rgb(255, 221, 33);}  /* selected link */
     display: block !important;
   }
 }
-@media (min-device-width: 768px) and (max-device-width: 991px) {
+@media (min-device-width: 768px) and (max-device-width: 1199px) {
   .visible-sm {
     display: block !important;
   }
 }
-@media (min-device-width: 992px) {
+@media (min-device-width: 1200px) {
   .visible-md {
     display: block !important;
   }

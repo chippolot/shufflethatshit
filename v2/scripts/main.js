@@ -29,7 +29,7 @@ $(document).ready(function()
 	}
 
 	// Add touch swipe handlers
-	$(".player").touchwipe({
+	$(".content").touchwipe({
 	     wipeLeft: function() { next(); },
 	     wipeRight: function() { previous(); },
 	     min_move_x: 40,
