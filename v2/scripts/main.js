@@ -8,6 +8,7 @@ $(document).ready(function()
 {
 	// Show the page loader
 	showLoader(true);
+	$('.sts-control-pause').hide();
 
 	// Initialize the soundcloud api
 	soundcloud_initialize("aa4e45fd3130de0246b5ba7c0c72a67e");
@@ -57,11 +58,13 @@ function showLoader(firstCall)
 
 	$('.sts-loader').fadeIn(750);
 	$('.sts-player').fadeOut(firstCall ? 0 : 750);
+	$('.sts-controls').hide()
 }
 
 function showPlayer()
 {
 	$('.sts-player').fadeIn(750);
+	$('.sts-controls').show()
 }
 
 // Player Controls
@@ -74,11 +77,27 @@ function previous()
 function play()
 {
 	player.play();
+	$('.sts-control-hide-during-play').hide();
+	$('.sts-control-hide-during-pause').show();
 }
 
 function pause()
 {
 	player.pause();
+	$('.sts-control-hide-during-play').show();
+	$('.sts-control-hide-during-pause').hide();
+}
+
+function togglePlay()
+{
+	if (player.playing)
+	{
+		pause();
+	}
+	else
+	{
+		play();
+	}
 }
 
 function next()
@@ -138,7 +157,7 @@ function initializePlayer()
 	player = new Player();
 
 	player.onTrackLoaded = $.proxy(function() {
-		var songInfoDiv = $('.sts-song_info');
+		var songInfoDiv = $('.sts-song-info');
 		var songBackgroundDiv = $('.sts-song-image');
 		var currentTrack = player.currentTrack;
 

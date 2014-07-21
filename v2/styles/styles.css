@@ -3,7 +3,7 @@
 	rgba(255, 255, 255, 1)	//Text Default Color
 	rgb(255, 221, 33)		//Text Rollover Color
 	#1D1D26					//Background
-	rgba(0, 0, 0, 0.6)		//Header and Footer
+	rgba(20, 20, 20, 1)		//Header and Footer
 */
 
 /* Basic Overrides */
@@ -25,6 +25,13 @@ a:link {color:rgba(255, 255, 255, 1);}      /* unvisited link */
 a:visited {color:rgba(255, 255, 255, 1);}  /* visited link */
 a:hover {color:rgb(255, 221, 33);}  /* mouse over link */
 a:active {color:rgb(255, 221, 33);}  /* selected link */
+
+/* Alignment */
+.align-vertical-center {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
 
 /* Text Transformations */
 .text-left {
@@ -62,7 +69,7 @@ a:active {color:rgb(255, 221, 33);}  /* selected link */
     width:100%;
     top:0px;
     left:0px;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(20, 20, 20, 1);
     max-height: 30px;
     height:30px;
     position:absolute;
@@ -73,6 +80,7 @@ a:active {color:rgb(255, 221, 33);}  /* selected link */
 	width: 100%;
 	position:absolute;
     height: calc(100% - 60px);
+    overflow:hidden;
 }
 
 .footer {
@@ -80,15 +88,18 @@ a:active {color:rgb(255, 221, 33);}  /* selected link */
     bottom:0px;
     left:0px;
     position:absolute;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(20, 20, 20, 1);
     height: 30px;
 	font-size: 14px;
 }
 
 /* Filters */
 .filter-blur {
-	-webkit-filter: blur(20px);
-	-moz-filter: blur(20px);
+    filter: blur(20px);
+    -webkit-filter: blur(20px);
+    -moz-filter: blur(20px);
+    -ms-filter: blur(20px);
+    -o-filter: blur(20px);
 }
 
 /* Helpers */
@@ -109,4 +120,26 @@ a:active {color:rgb(255, 221, 33);}  /* selected link */
 	/* Rules below not implemented in browsers yet */
 	-o-user-select: none;
 	user-select: none;
+}
+
+/* platform specific */
+.visible-xs,
+.visible-sm,
+.visible-md {
+  display: none !important;
+}
+@media (max-device-width: 767px) {
+  .visible-xs {
+    display: block !important;
+  }
+}
+@media (min-device-width: 768px) and (max-device-width: 991px) {
+  .visible-sm {
+    display: block !important;
+  }
+}
+@media (min-device-width: 992px) {
+  .visible-md {
+    display: block !important;
+  }
 }

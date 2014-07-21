@@ -10,10 +10,24 @@
 			var trackId = this.playlist.tracklist[this.currentTrackIndex];
 			console.log("-- Loading track at index", trackId, this.currentTrackIndex);
 
+			if (!this.playlist.trackData[trackId].streamable)
+			{
+				console.log("-- Track is not streamable... skipping", trackId);
+				this.next();
+				return;
+			}
+
 			soundcloud_stream(trackId, {
 				onfinish: $.proxy(function() {
 					this.trackLoaded = false;
 					this.next();
+				}, this),
+				onload: $.proxy(function(){
+					if (this.sound.readyState == 2)
+					{
+						console.log("-- Track could not load... skipping", trackId);
+						this.next();
+					}
 				}, this),
 				whileplaying: $.proxy(function(){
 					if (this.onPlayPositionChanged)

@@ -19,9 +19,9 @@
     <!-- Shared Styles -->
 
     <!-- Styles -->
-    <link rel="stylesheet" type="text/css" href="styles/gridiculous.css"/>
-    <link rel="stylesheet" type="text/css" href="styles/styles.css"/>
-    <link rel="stylesheet" type="text/css" href="styles/sts-styles.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/grid-styles.css?v=00001"/>
+    <link rel="stylesheet" type="text/css" href="styles/styles.css?v=00001"/>
+    <link rel="stylesheet" type="text/css" href="styles/sts-styles.css?v=00001"/>
 
     <!-- Shared Scripts -->
     <script src="http://connect.soundcloud.com/sdk.js"></script>
@@ -29,24 +29,73 @@
     <script src="scripts/libs/jquery.touchwipe.min.js"></script>
 
     <!-- Scripts -->
-    <script src='scripts/mobile_check.js'></script>
-    <script src='scripts/utils.js'></script>
-    <script src='scripts/soundcloud_helpers.js'></script>
-    <script src='scripts/playlist_descriptor.js'></script>
-    <script src='scripts/player.js'></script>
-    <script src='scripts/main.js'></script>
+    <script src='scripts/mobile_check.js?v=00001'></script>
+    <script src='scripts/utils.js?v=00001'></script>
+    <script src='scripts/soundcloud_helpers.js?v=00001'></script>
+    <script src='scripts/playlist_descriptor.js?v=00001'></script>
+    <script src='scripts/player.js?v=00001'></script>
+    <script src='scripts/main.js?v=00001'></script>
 
   </head>
   <body>
-  	<!-- Header -->
-    <div class="header">
-    </div>
-
     <!-- Content -->
     <div class="content">
-    	<div class="sts-player sts-song-image fill background-cover filter-blur"></div>
+
+        <!-- Song Images -->
+    	<div class="sts-player sts-song-image sts-song-image-blurred fill background-cover filter-blur"></div>
     	<div class="sts-player sts-song-image fill background-contain"></div>
+
+        <!-- Loader -->
         <div class="sts-loader fill background-cover"></div>
+
+        <!-- Controls -->
+        <div class="sts-controls fill">
+
+            <!-- Desktop Controls -->
+            <div class="visible-md fill">
+                <div class="grid wfull selection-disabled fill">
+                    <div class="c3 sts-control" onclick="previous()">
+                        <div class="sts-control-icon align-vertical-center">&#xf04a;</div>    <!-- Previous -->
+                    </div>
+                    <div class="c6 sts-control" onclick="togglePlay()">
+                        <div class="sts-control-icon align-vertical-center">
+                            <div class="sts-control-hide-during-pause">&#xf04c;</div>    <!-- Pause -->
+                            <div class="sts-control-hide-during-play">&#xf04b;</div>    <!-- Play -->
+                        </div>
+                    </div>  
+                    <div class="c3 sts-control" onclick="next()">
+                        <div class="sts-control-icon align-vertical-center">&#xf04e;</div>    <!-- Next -->
+                    </div>  
+                </div>
+            </div>
+
+            <!-- Phone/Tablet Controls -->
+            <div class="visible-xs fill">
+                <div class="grid wfull selection-disabled fill">
+                    <div class="c3 sts-control sts-control-hide-during-play" onclick="previous()">
+                        <div class="sts-control-icon align-vertical-center">&#xf04a;</div>              <!-- Previous -->
+                    </div>
+                    <div class="c6 sts-control sts-control-hide-during-play" onclick="play()">
+                        <div class="sts-control-icon align-vertical-center">
+                            <div class="sts-control-pause">&#xf04b;</div>                               <!-- Play -->
+                        </div>
+                    </div>  
+                    <div class="c3 sts-control sts-control-hide-during-play" onclick="next()">
+                        <div class="sts-control-icon align-vertical-center">&#xf04e;</div>              <!-- Next -->
+                    </div>  
+                    <div class="c12 sts-control sts-control-hide-during-pause" onclick="pause()"></div> <!-- Pause -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="grid wfull">
+            <div class="c12 text-center">
+                <div class="sts-song-info"></div>
+            </div>
+        </div>
     </div>
 
     <!-- Footer -->
