@@ -67,6 +67,20 @@ function showPlayer()
 	$('.sts-controls').show()
 }
 
+function getRandomAnimatedBackrgound()
+{
+	var bgs = [
+		"http://payload236.cargocollective.com/1/3/111325/7035883/hexa_vision.gif",
+		"http://payload236.cargocollective.com/1/3/111325/7035883/meta_hexa4.gif",
+		"http://payload236.cargocollective.com/1/3/111325/7035883/return_of_the_triangle3.gif",
+		"http://payload145.cargocollective.com/1/3/111325/5216379/inverter.gif",
+		"http://payload71.cargocollective.com/1/3/111325/3721731/hexa.gif",
+		"http://payload71.cargocollective.com/1/3/111325/3721731/effigy.gif",
+		"http://payload71.cargocollective.com/1/3/111325/3721731/cycloid.gif"
+	];
+	return bgs[Math.floor(Math.random()*bgs.length)];
+}
+
 // Player Controls
 ///////////////////////////////////////////////////////////////////////////////
 function previous()
@@ -105,7 +119,7 @@ function next()
 	player.next();
 }
 
-// Soundcloub /////////////////////////////////////////////////////////////////
+// Soundcloud /////////////////////////////////////////////////////////////////
 function fillPlaylistInputFromUrl()
 {
 	console.log("-- checking url for saved playlist descriptor");
@@ -159,18 +173,28 @@ function initializePlayer()
 	player.onTrackLoaded = $.proxy(function() {
 		var songInfoDiv = $('.sts-song-info');
 		var songBackgroundDiv = $('.sts-song-image');
+		var missingBackgroundDiv = $('.sts-missing-song-image');
 		var currentTrack = player.currentTrack;
 
 		var songTitleLink = '<a target="_blank" href="'+currentTrack.permalink_url+'">'+currentTrack.title+'</a>';
 		songInfoDiv.html(songTitleLink);
 
-		var backgroundImageValue = "none";
 		if (currentTrack.artwork_url)
 		{
 			var artwork_url = currentTrack.artwork_url.replace('large.jpg', 't500x500.jpg');
-			backgroundImageValue = "url("+artwork_url+")";
+			var backgroundImageValue = "url("+artwork_url+")";
+			songBackgroundDiv.css("background-image", backgroundImageValue);
+			missingBackgroundDiv.hide();
+			songBackgroundDiv.show();
 		}
-		songBackgroundDiv.css("background-image", backgroundImageValue);
+		else
+		{
+			var artwork_url = getRandomAnimatedBackrgound();
+			var backgroundImageValue = "url("+artwork_url+")";
+			missingBackgroundDiv.css("background-image", backgroundImageValue);
+			missingBackgroundDiv.show();
+			songBackgroundDiv.hide();
+		}
 
 		currentPlaylistDescriptor.trackId = currentTrack.id;
 
